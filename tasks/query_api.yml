@@ -13,10 +13,6 @@
       - 200
   register: api_call_results
 
-- name: show api_call_results
-  ansible.builtin.debug:
-    var=api_call_results
-
 - name: "Parse Results"
   set_fact:
     input_sources_results: "{{ ( input_sources_results | default([]) ) + api_call_results['json']['results'] }}"
@@ -25,6 +21,5 @@
 
 - name: "Retrieve More Credential Input Sources Details"
   include_tasks: query_api.yml
-  when: current_page|int < 5
-  #when: api_call_results['json']['next'] != None and (api_call_results['json']['next'] | length > 0)
+  when: api_call_results['json']['next'] != '' and (api_call_results['json']['next'] | length > 0)
 
