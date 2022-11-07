@@ -20,7 +20,7 @@
 
   - name: "Setup Variable To Return Results"
     ansible.builtin.set_fact:
-      nput_sources_results: []
+      input_sources_results: []
 
   - name: "Get {{ collection }}"
     ansible.builtin.include_tasks: query_api.yml
