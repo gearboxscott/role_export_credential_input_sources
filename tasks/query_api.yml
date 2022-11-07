@@ -25,6 +25,6 @@
 
 - name: "Retrieve More Credential Input Sources Details"
   include_tasks: query_api.yml
-  when: current_page < 5
+  when: current_page|int < 5
   #when: api_call_results['json']['next'] != None and (api_call_results['json']['next'] | length > 0)
 
