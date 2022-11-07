@@ -1,7 +1,8 @@
 ---
 # tasks file for role_export_credential_input_sources
 
-- block:
+- name: Export credential Input Sources Block
+  block:
 
   - name: Create a new token using username/password
     ansible.controller.token:
@@ -34,11 +35,13 @@
       mode: '0644'
 
   always:
-  - name: Delete our Token with the token we created
-    ansible.controller.token:
-      existing_token: "{{ controller_token }}"
-      state: absent
-      controller_host: "{{ controller_hostname }}"
-      controller_username: "{{ controller_username }}"
-      controller_password: "{{ controller_password }}"
-      validate_certs: "{{ controller_validate_certs }}"
+    - name: Delete our Token with the token we created
+      ansible.controller.token:
+        existing_token: "{{ controller_token }}"
+        state: absent
+        controller_host: "{{ controller_hostname }}"
+        controller_username: "{{ controller_username }}"
+        controller_password: "{{ controller_password }}"
+        validate_certs: "{{ controller_validate_certs }}"
+
+...

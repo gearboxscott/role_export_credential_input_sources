@@ -14,12 +14,13 @@
   register: api_call_results
 
 - name: "Parse Results"
-  set_fact:
-    input_sources_results: "{{ ( input_sources_results | default([]) ) + api_call_results['json']['results'] }}"
+  ansible.builtin.set_fact:
+    input_sources_results: "{{ (input_sources_results | default([])) + api_call_results['json']['results'] }}"
     api_endpoint: "{{ controller_hostname }}{{ api_call_results['json']['next'] }}"
     current_page: "{{ (current_page | int) + 1 }}"
 
 - name: "Retrieve More Credential Input Sources Details"
-  include_tasks: query_api.yml
+  ansible.builtin.include_tasks: query_api.yml
   when: api_call_results['json']['next'] != None and (api_call_results['json']['next'] | length > 0)
 
+...
