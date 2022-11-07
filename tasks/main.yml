@@ -9,14 +9,14 @@
       description: 'Token for Controller API Lookup - ALWAYS DELETE ME IF FOUND'
       scope: "read"
       state: present
-      controller_host: "{{ controller_hostname }}"
+      controller_host: {{ controller_hostname }}"
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
       validate_certs: "{{ controller_validate_certs }}"
 
   - name: "Set API Endpoint URL"
     ansible.builtin.set_fact:
-      api_endpoint: "{{ controller_hostname }}/api/v2/credential_input_sources/?page_size={{ page_size }}{{ query_args }}"
+      api_endpoint: "https://{{ controller_hostname }}/api/v2/credential_input_sources/?page_size={{ page_size }}{{ query_args }}"
       current_page: "1"
 
   - name: "Setup Variable To Return Results"
@@ -28,7 +28,7 @@
 
   - name: Write to File
     ansible.builtin.template:
-      src: '{{ yaml_file }}.j2'
+      src: 'process_credential_input_sources.j2'
       dest: '{{ yaml_file }}'
       mode: '0644'
 

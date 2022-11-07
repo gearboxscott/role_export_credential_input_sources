@@ -2,7 +2,7 @@
 # defaults file for role_export_credential_input_sources
 
 controller_validate_certs: false
-controller_hostname: 'https://<name of controller>'
+controller_hostname: '<name of controller>'
 controller_username: admin
 controller_password: CHANGEME
 
