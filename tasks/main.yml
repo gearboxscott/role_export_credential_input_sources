@@ -1,51 +1,39 @@
 ---
 # tasks file for role_export_credential_input_sources
 
-- name: Project RHIT-AAP-Hashicorp
-  hosts: localhost
-  connection: local
-  gather_facts: yes
-  collections:
-    - ansible.controller
+- block:
 
-  vars:
-    yaml_file: current_credential_input_sources.yml
+  - name: Create a new token using username/password
+    ansible.controller.token:
+      description: 'Token for Controller API Lookup - ALWAYS DELETE ME IF FOUND'
+      scope: "read"
+      state: present
+      controller_host: "{{ controller_hostname }}"
+      controller_username: "{{ controller_username }}"
+      controller_password: "{{ controller_password }}"
+      validate_certs: "{{ controller_validate_certs }}"
 
-  tasks:
+  - name: Call Controller API to get Credential Input Sources
+    ansible.builtin.uri:
+      url: '{{ controller_hostname }}/api/v2/credential_input_sources'
+      method: GET
+      headers:
+        Content-Type: application/json
+        Authorization: 'Bearer {{ controller_token.token }}'
+      validate_certs: '{{ controller_validate_certs }}'
+    register: cac_credential_input_sources
 
-  - block:
+  - name: Write to File
+    ansible.builtin.template:
+      src: '{{ yaml_file }}.j2'
+      dest: '{{ yaml_file }}'
 
-    - name: Create a new token using username/password
-      ansible.controller.token:
-        description: 'Token for Controller API Lookup - ALWAYS DELETE ME IF FOUND'
-        scope: "read"
-        state: present
-        controller_host: "{{ controller_hostname }}"
-        controller_username: "{{ controller_username }}"
-        controller_password: "{{ controller_password }}"
-        validate_certs: "{{ controller_validate_certs }}"
-
-    - name: Call Controller API to get Credential Input Sources
-      ansible.builtin.uri:
-        url: '{{ controller_hostname }}/api/v2/credential_input_sources'
-        method: GET
-        headers:
-          Content-Type: application/json
-          Authorization: 'Bearer {{ controller_token.token }}'
-        validate_certs: '{{ controller_validate_certs }}'
-      register: cac_credential_input_sources
-
-    - name: Write to File
-      ansible.builtin.template:
-        src: '{{ yaml_file }}.j2'
-        dest: '{{ yaml_file }}'
-
-    always:
-    - name: Delete our Token with the token we created
-      ansible.controller.token:
-        existing_token: "{{ controller_token }}"
-        state: absent
-        controller_host: "{{ controller_hostname }}"
-        controller_username: "{{ controller_username }}"
-        controller_password: "{{ controller_password }}"
-        validate_certs: "{{ controller_validate_certs }}"
+  always:
+  - name: Delete our Token with the token we created
+    ansible.controller.token:
+      existing_token: "{{ controller_token }}"
+      state: absent
+      controller_host: "{{ controller_hostname }}"
+      controller_username: "{{ controller_username }}"
+      controller_password: "{{ controller_password }}"
+      validate_certs: "{{ controller_validate_certs }}"
