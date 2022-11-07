@@ -27,6 +27,9 @@
     ansible.builtin.template:
       src: '{{ yaml_file }}.j2'
       dest: '{{ yaml_file }}'
+      owner: 'root'
+      group: 'root'
+      mode: '0644'
 
   always:
   - name: Delete our Token with the token we created
