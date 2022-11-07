@@ -1,4 +1,4 @@
-role_export_credential_input_sources
+gearboxscott.controller.role_export_credential_input_sources
 =========
 
 This role will generate a file that contains a export of the credential input sources defined manually in Ansible Automation Controller GUI. This file can be include to setup credential input sources using `ansible.controller.credential_input_source` from the `ansible.controller` collection. This allows for restoration or configuration changes of the input sources using configuration-as-code options.
@@ -32,18 +32,26 @@ Here is a sample of how to use this role:
 
 * Fill out the `defaults/main.yml` variables so this role can perform it's tasks.
 
+* Fill out the `collections/requirements.yml` with:
+
+```yaml
+---
+collections:
+  - name: ansible.controller
+  - name: gearboxscott.controller
+
+```
+
 * Create a playbook to call the role:
 
 ```yaml
 - name: Export Credential Input Sources
   hosts: localhost
   connection: local
-  gather_facts: yes
-  collections:
-    - ansible.controller
+  gather_facts: false
 
   roles:
-    - role_export_credential_input_sources
+    - gearboxscott.controller.role_export_credential_input_sources
 ```
 
 License
