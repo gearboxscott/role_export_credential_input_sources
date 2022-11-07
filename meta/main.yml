@@ -16,4 +16,4 @@ galaxy_info:
     - controller_configuration
     - automation_platform
 dependencies:
-  - ansible.controller.token
+  - ansible.controller
