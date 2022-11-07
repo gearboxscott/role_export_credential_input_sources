@@ -15,7 +15,7 @@
 
   - name: Call Controller API to get Credential Input Sources
     ansible.builtin.uri:
-      url: '{{ controller_hostname }}/api/v2/credential_input_sources'
+      url: '{{ controller_hostname }}/api/v2/credential_input_sources/?page=1&page_size=1000000'
       method: GET
       headers:
         Content-Type: application/json
