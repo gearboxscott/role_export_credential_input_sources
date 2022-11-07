@@ -1,0 +1,25 @@
+﻿---
+# query_api.yml - called recursively until result pages are exhausted
+
+- name: Call Controller API to get Credential Input Sources
+  ansible.builtin.uri:
+    url: '{{ controller_hostname }}/api/v2/credential_input_sources'
+    method: GET
+    headers:
+      Content-Type: application/json
+      Authorization: 'Bearer {{ controller_token.token }}'
+    validate_certs: '{{ controller_validate_certs }}'
+    status_code:
+      - 200
+  register: api_call_results
+
+- name: "Parse Results"
+  set_fact:
+    input_sources_results: "{{ ( input_sources_results | default([]) ) + api_call_results['json']['results'] }}"
+    api_endpoint: "{{ controller_hostname }}{{ api_call_results['json']['next'] }}"
+    current_page: "{{ (current_page | int) + 1 }}"
+
+- name: "Retrieve More Credential Input Sources Details"
+  include_tasks: query_api.yml
+  when: api_call_results['json']['next'] != None and (api_call_results['json']['next'] | length > 0)
+

@@ -13,23 +13,30 @@
       controller_password: "{{ controller_password }}"
       validate_certs: "{{ controller_validate_certs }}"
 
-  - name: Call Controller API to get Credential Input Sources
-    ansible.builtin.uri:
-      url: '{{ controller_hostname }}/api/v2/credential_input_sources/?page=1&page_size=1000000'
-      method: GET
-      headers:
-        Content-Type: application/json
-        Authorization: 'Bearer {{ controller_token.token }}'
-      validate_certs: '{{ controller_validate_certs }}'
-    register: cac_credential_input_sources
+  - name: "Set API Endpoint URL"
+    ansible.builtin.set_fact:
+      api_endpoint: "{{ controller_hostname }}/api/v2/credential_input_sources/?page_size={{ page_size }}{{ query_args }}"
+      current_page: "1"
 
-  - name: Write to File
-    ansible.builtin.template:
-      src: '{{ yaml_file }}.j2'
-      dest: '{{ yaml_file }}'
-      owner: 'root'
-      group: 'root'
-      mode: '0644'
+  - name: "Setup Variable To Return Results"
+    ansible.builtin.set_fact:
+      nput_sources_results: []
+
+  - name: "Get {{ collection }}"
+    ansible.builtin.include_tasks: query_api.yml
+
+  - name: Save Raw Results
+    ansible.builtin.copy:
+      content: "{{ input_sources_results | to_nice_json }}"
+      dest: "query_results.json"
+
+#  - name: Write to File
+#    ansible.builtin.template:
+#      src: '{{ yaml_file }}.j2'
+#      dest: '{{ yaml_file }}'
+#      owner: 'root'
+#      group: 'root'
+#      mode: '0644'
 
   always:
   - name: Delete our Token with the token we created

@@ -9,3 +9,5 @@ controller_password: CHANGEME
 # Name of file to create that contains the exported credential input Sources
 
 yaml_file: current_credential_input_sources.yml
+query_args: ''
+page_size: 200
