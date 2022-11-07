@@ -15,5 +15,4 @@ galaxy_info:
     - collection
     - controller_configuration
     - automation_platform
-dependencies:
-  - ansible.controller
+dependencies: []
