@@ -25,18 +25,18 @@
   - name: "Get {{ collection }}"
     ansible.builtin.include_tasks: query_api.yml
 
-  - name: Save Raw Results
-    ansible.builtin.copy:
-      content: "{{ input_sources_results | to_nice_json }}"
-      dest: "query_results.json"
+#  - name: Save Raw Results
+#    ansible.builtin.copy:
+#      content: "{{ input_sources_results | to_nice_json }}"
+#      dest: "query_results.json"
 
-#  - name: Write to File
-#    ansible.builtin.template:
-#      src: '{{ yaml_file }}.j2'
-#      dest: '{{ yaml_file }}'
-#      owner: 'root'
-#      group: 'root'
-#      mode: '0644'
+  - name: Write to File
+    ansible.builtin.template:
+      src: '{{ yaml_file }}.j2'
+      dest: '{{ yaml_file }}'
+      owner: 'root'
+      group: 'root'
+      mode: '0644'
 
   always:
   - name: Delete our Token with the token we created
